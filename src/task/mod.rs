@@ -55,9 +55,10 @@ pub(crate) mod blocking;
 /// is useful to prevent long-running synchronous operations from blocking the main futures
 /// executor.
 ///
-/// See also: [`task::block_on`].
+/// See also: [`task::block_on`], [`task::spawn`].
 ///
 /// [`task::block_on`]: fn.block_on.html
+/// [`task::spawn`]: fn.spawn.html
 ///
 /// # Examples
 ///
@@ -68,7 +69,7 @@ pub(crate) mod blocking;
 /// #
 /// use async_std::task;
 ///
-/// task::blocking(|| {
+/// task::spawn_blocking(|| {
 ///     println!("long-running task here");
 /// }).await;
 /// #
@@ -79,10 +80,10 @@ pub(crate) mod blocking;
 #[cfg(any(feature = "unstable", feature = "docs"))]
 #[cfg_attr(feature = "docs", doc(cfg(unstable)))]
 #[inline]
-pub fn blocking<F, R>(f: F) -> task::JoinHandle<R>
+pub fn spawn_blocking<F, R>(f: F) -> task::JoinHandle<R>
 where
     F: FnOnce() -> R + Send + 'static,
     R: Send + 'static,
 {
-    blocking::spawn_blocking(future)
+    blocking::spawn(f)
 }
