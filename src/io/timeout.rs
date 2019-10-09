@@ -1,6 +1,6 @@
-use std::time::Duration;
-use std::task::{Context, Poll};
 use std::pin::Pin;
+use std::task::{Context, Poll};
+use std::time::Duration;
 
 use futures_timer::Delay;
 use pin_utils::unsafe_pinned;
@@ -39,7 +39,8 @@ where
     Timeout {
         timeout: Delay::new(dur),
         future: f,
-    }.await
+    }
+    .await
 }
 
 /// Future returned by the `FutureExt::timeout` method.
