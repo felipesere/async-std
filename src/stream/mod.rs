@@ -40,11 +40,13 @@ cfg_if! {
         mod extend;
         mod from_stream;
         mod into_stream;
+        mod interval;
 
         pub use double_ended_stream::DoubleEndedStream;
         pub use extend::Extend;
         pub use from_stream::FromStream;
         pub use into_stream::IntoStream;
+        pub use interval::{interval, Interval};
 
         #[cfg_attr(feature = "docs", doc(cfg(unstable)))]
         #[doc(inline)]
