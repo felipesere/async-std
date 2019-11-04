@@ -43,3 +43,19 @@ impl<T> Stream for PartitionStream<T> {
         Poll::Pending
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::VecDeque;
+    use crate::task;
+
+    #[test]
+    fn it_receives_things_on_the_left() {
+        task::block_on(async {
+            let s: VecDeque<usize> = vec![1, 2, 3, 4].into_iter().collect();
+
+            let (a, b) = partition(s, |&val| val % 2 == 0);
+        })
+    }
+}
