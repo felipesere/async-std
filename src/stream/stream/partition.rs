@@ -19,11 +19,20 @@ pub struct PartitionStream<T> {
 }
 
 
-fn partition<S, F>(source: S, is_left: F)
+fn partition<S, F>(source: S, is_left: F) -> (PartitionStream<S::Item>, PartitionStream<S::Item>)
     where
         S: Stream,
         F: Fn(&S::Item) -> bool,
 {
+    let (poller, foo) = channel(1);
+
+    let (a, left) = channel(1);
+    let (b, right) = channel(1);
+
+    (
+        PartitionStream {poller: poller.clone(), receiver: left },
+        PartitionStream {poller: poller.clone(), receiver: right },
+    )
 }
 
 
