@@ -51,6 +51,7 @@ mod ne;
 mod next;
 mod nth;
 mod partial_cmp;
+mod partition;
 mod position;
 mod scan;
 mod skip;
@@ -86,6 +87,7 @@ use ne::NeFuture;
 use next::NextFuture;
 use nth::NthFuture;
 use partial_cmp::PartialCmpFuture;
+use partition::PartitionStream;
 use position::PositionFuture;
 use try_fold::TryFoldFuture;
 use try_for_each::TryForEachFuture;
@@ -388,14 +390,14 @@ extension_trait! {
             use std::collections::VecDeque;
 
             let v: VecDeque<_> = vec![&1, &2, &3].into_iter().collect();
-            
+
             let mut v_copied  = v.copied();
 
             assert_eq!(v_copied.next().await, Some(1));
             assert_eq!(v_copied.next().await, Some(2));
             assert_eq!(v_copied.next().await, Some(3));
             assert_eq!(v_copied.next().await, None);
-    
+
 
             #
             # }) }
