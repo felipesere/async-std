@@ -44,13 +44,23 @@ impl<T> Stream for PartitionStream<T> {
 
     fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
         let this = self.project();
-        this.poller.send(());
+        let mut send_fut = Box::pin(self.poller.send(()));
 
-        let next = futures_core::ready!(this.receiver.poll_next(cx));
+        let sent = match send_fut.poll(cx) {
+            Poll::Ready(val) => val,
+            _ => return Poll::Pending, // wat? Not really sure what to do here...
+        };
+
+        let next = match this.receiver.poll_next(cx) {
+            Poll::Ready(val) => val,
+            _ => return Poll::Pending, // what should be do here?
+        };
 
         match next {
             ready @ Some(_) => Poll::Ready(ready),
-            _ => Poll::Pending
+            _ => {
+                Poll::Pending
+            }
         }
     }
 }
